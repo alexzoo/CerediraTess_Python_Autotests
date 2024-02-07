@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+env/
+venv/
+build/
+dist/
+downloads/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+
+# Environments
+.env
+.env.local
+.venv
+
+# PyCharm specific
+.idea/
+*.iml
+
+# Playwright specific
+test-results/
+playwright-report/
+pw-browser/
+
+# Reports
+pyreport.html
+result.xml
+test_report.*
+test_results.*
