@@ -8,6 +8,7 @@ def page(playwright):
     browser = playwright.chromium.launch(
         headless=False,
         args=[
+            '--start-maximized',
             '--no-sandbox',
             '--disable-dev-shm-usage'
         ]
