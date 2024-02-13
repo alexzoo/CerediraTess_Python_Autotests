@@ -3,7 +3,7 @@ from playwright.sync_api import Page
 
 from elements.button import Button
 from pages._base_page import BasePage
-from pages.orgtechnics_and_supplies_page import OrgtechnicsAndSuppliesPage
+from pages.search_page import SearchPage
 
 
 class StartPage(BasePage):
@@ -32,9 +32,9 @@ class StartPage(BasePage):
         self.category_orgtechnics_and_supplies.click()
 
     @allure.step("Go to 'Orgtechnics and supplies' page")
-    def goto_orgtechnics_and_supplies_page(self) -> OrgtechnicsAndSuppliesPage:
+    def goto_search_page(self) -> SearchPage:
         self.close_popup()
         self.click_all_categories_btn()
         self.hover_category_electronics()
         self.click_category_orgtechnics_and_supplies()
-        return OrgtechnicsAndSuppliesPage(self.page)
+        return SearchPage(self.page)

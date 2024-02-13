@@ -3,11 +3,14 @@ from time import sleep
 from playwright.sync_api import Page
 import allure
 
+from elements.input import SearchInput
+from pages._base_page import BasePage
 
-class OrgtechnicsAndSuppliesPage:
+
+class SearchPage(BasePage):
     # locators
-    SEARCH_FIELD = '//input[@data-marker="search-form/suggest"]'
-    SEARCH_BTN = '//button[@data-marker="search-form/submit-button"]'
+    # SEARCH_FIELD = '//input[@data-marker="search-form/suggest"]'
+    # SEARCH_BTN = '//button[@data-marker="search-form/submit-button"]'
     CHECKBOX_NEW = '//span[contains(text(), "Новые")]'
     CHANGE_REGION_LINK = '//div[@data-marker="search-form/change-location"]'
     SEARCH_REGION_INPUT = '//input[@data-marker="popup-location/region/input"]'
@@ -18,17 +21,13 @@ class OrgtechnicsAndSuppliesPage:
     LIST_OF_PRICES = '//div[@data-marker="catalog-serp"]//meta[@itemprop="price"]'
 
     def __init__(self, page: Page) -> None:
-        self.page = page
+        super().__init__(page)
+        self.search_form = SearchInput(self.page.locator('div[data-marker="search-form"]'))
 
     @allure.step("Search item")
-    def search_item(self, item_name: str) -> None:
-        # self.page.locator(self.SEARCH_FIELD).clear()
-        self.page.locator(self.SEARCH_FIELD).click()
-        self.page.locator(self.SEARCH_FIELD).fill(item_name)
-        sleep(1)
-        self.page.locator(self.SEARCH_FIELD).press('Enter')
-        # wait for results to load
-        self.page.wait_for_selector(self.RESULT_ITEMS)
+    def search_form(self, item_name: str) -> None:
+        self.search_form.search_item(item_name)
+        self.page.wait_for_selector(self.search_form.search_result)
 
     @allure.step("Click 'New' checkbox")
     def click_checkbox_new(self) -> None:
@@ -57,7 +56,7 @@ class OrgtechnicsAndSuppliesPage:
         self.page.locator(self.SORT_OPTION_EXPENSIVE).click()
 
     @allure.step("Print prices for first five items")
-    def print_prices_for_first_five_items(self) -> None:
+    def print_prices_for_items(self) -> None:
         for i in range(5):
             print(f"Цена {self.page.locator(self.LIST_OF_PRICES).nth(i).get_attribute('content')}")
 

@@ -3,13 +3,13 @@ import allure
 
 @allure.feature('Test Avito search')
 def test_avito_search(start_page):
-    orgtechics_and_supply_page = start_page.goto_orgtechnics_and_supplies_page()
-    orgtechics_and_supply_page.search_item('Принтер')
-    orgtechics_and_supply_page.click_checkbox_new()  # add parameter
-    orgtechics_and_supply_page.change_region('Владивосток')
-    orgtechics_and_supply_page.show_results()
-    orgtechics_and_supply_page.sort_results()  # add parameter
-    orgtechics_and_supply_page.print_prices_for_first_five_items()
+    search_page = start_page.goto_search_page()
+    search_page.search_form('Принтер')
+    search_page.click_checkbox_new()  # add parameter
+    search_page.change_region('Владивосток')
+    search_page.show_results()
+    search_page.sort_results()  # add parameter
+    search_page.print_prices_for_items()
 
 """
 1.Перейти по ссылке https://www.avito.ru/penza/transport?cd=1 (При
