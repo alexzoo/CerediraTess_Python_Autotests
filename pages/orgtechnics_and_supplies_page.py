@@ -23,7 +23,7 @@ class OrgtechnicsAndSuppliesPage:
     @allure.step("Search item")
     def search_item(self, item_name: str) -> None:
         # self.page.locator(self.SEARCH_FIELD).clear()
-        sleep(1)
+        self.page.locator(self.SEARCH_FIELD).click()
         self.page.locator(self.SEARCH_FIELD).fill(item_name)
         sleep(1)
         self.page.locator(self.SEARCH_FIELD).press('Enter')
