@@ -3,14 +3,12 @@ from time import sleep
 from playwright.sync_api import Page
 import allure
 
-from elements.input import SearchInput
+from elements.search import SearchForm, SearchFilters
 from pages._base_page import BasePage
 
 
 class SearchPage(BasePage):
-    # locators
-    # SEARCH_FIELD = '//input[@data-marker="search-form/suggest"]'
-    # SEARCH_BTN = '//button[@data-marker="search-form/submit-button"]'
+
     CHECKBOX_NEW = '//span[contains(text(), "Новые")]'
     CHANGE_REGION_LINK = '//div[@data-marker="search-form/change-location"]'
     SEARCH_REGION_INPUT = '//input[@data-marker="popup-location/region/input"]'
@@ -22,24 +20,35 @@ class SearchPage(BasePage):
 
     def __init__(self, page: Page) -> None:
         super().__init__(page)
-        self.search_form = SearchInput(self.page.locator('div[data-marker="search-form"]'))
+        self.search_form = SearchForm(self.page.locator('div[data-marker="search-form"]'))
+        self.search_filters = SearchFilters(self.page.locator('div[data-marker="search-filters"]'))
+        self.search_results = self.page.locator('div[data-marker="catalog-serp"]')
+        self.sort = self.page.locator('data-marker="sort/title"')
+        self.change_location = self.page.locator('div[data-marker="search-form/change-location"]')
+        self.popup_location_input = self.page.locator('input[data-marker="popup-location/region/input"]')
+        self.suggest_list = self.page.locator('ul[data-marker="suggest-list"]')
+        self.popup_location_save_button = self.page.locator('button[data-marker="popup-location/save-button"]')
 
     @allure.step("Search item")
-    def search_form(self, item_name: str) -> None:
+    def make_search(self, item_name: str) -> None:
         self.search_form.search_item(item_name)
-        self.page.wait_for_selector(self.search_form.search_result)
+        self.search_results.wait_for()
 
-    @allure.step("Click 'New' checkbox")
-    def click_checkbox_new(self) -> None:
-        # self.page.wait_for_selector(self.CHECKBOX_NEW)
-        sleep(1)
-        self.page.locator(self.CHECKBOX_NEW).click()
+    @allure.step("Apply search filters")
+    def apply_search_filters(self, **kwargs) -> None:
+
+        if kwargs.get('New', False):
+            self.search_filters.switch_new_checkbox(on=True)
 
     @allure.step("Change region")
     def change_region(self, region_name: str) -> None:
-        self.page.locator(self.CHANGE_REGION_LINK).click()
-        self.page.locator(self.SEARCH_REGION_INPUT).fill(region_name)
-        self.page.locator(self.SEARCH_REGION_INPUT).press('Enter')
+        self.change_location.click()
+        self.popup_location_input.fill(region_name)
+        self.suggest_list.get_by_text(region_name).nth(0).click()
+        # self.popup_location_save_button.wait_for()
+        self.popup_location_save_button.click()
+
+
 
     @allure.step("Show results")
     def show_results(self) -> None:
