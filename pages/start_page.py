@@ -21,7 +21,6 @@ class StartPage(BasePage):
     @allure.step("Select category and subcategory")
     def select_category_and_subcategory(self, category_name: str, subcategory_name: str) -> None:
         self.close_popup()
-
         self.page.locator(self.all_categories_button).click()
         self.page.locator(self.categories).get_by_text(category_name).hover()
         self.page.locator(self.subcategories).get_by_text(subcategory_name).click()
