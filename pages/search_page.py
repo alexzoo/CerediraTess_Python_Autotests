@@ -14,6 +14,7 @@ class SearchPage(BasePage):
         self.search_form_input = self.page.locator('input[data-marker="search-form/suggest"]')
         self.search_form_submit_button = self.page.locator('button[data-marker="search-form/submit-button"]')
         self.search_filters = self.page.locator('div[data-marker="search-filters"]')
+        self.search_filters_submit_button = self.page.locator('button[data-marker="search-filters/submit-button"]')
         self.search_results = self.page.locator('div[data-marker="catalog-serp"]')
         self.change_location = self.page.locator('div[data-marker="search-form/change-location"]')
         self.popup_location_input = self.page.locator('input[data-marker="popup-location/region/input"]')
@@ -27,14 +28,17 @@ class SearchPage(BasePage):
         self.search_form_input.fill(item_name)
         self.search_form_submit_button.click()
         self.search_results.wait_for()
+        sleep(5)
 
     @allure.step("Apply search filter 'New'")
     def apply_search_filter_new(self, new=False) -> None:
         new_checkbox = self.search_filters.get_by_text("Новые")
         if new_checkbox.is_checked() != new:
             new_checkbox.click()
-            sleep(1)
             assert new_checkbox.is_checked() == new
+            self.search_filters_submit_button.click()
+            self.search_results.wait_for()
+            sleep(5)
 
     @allure.step("Change region")
     def change_region(self, region_name: str) -> None:
@@ -43,14 +47,17 @@ class SearchPage(BasePage):
         self.suggest_list.get_by_text(region_name).first.click()
         self.popup_location_save_button.click()
         self.search_results.wait_for()
+        sleep(5)
 
     @allure.step("Sort results")
     def sort_results(self, sort_type: str) -> None:
         if sort_type not in ['Дороже', 'Дешевле', 'По дате']:
-            raise ValueError("sort_type use only: 'Дороже', 'Дешевле' or 'По дате'")
+            raise ValueError("use only: 'Дороже', 'Дешевле' or 'По дате'")
 
         self.sort_dropdown.click()
         self.sort_dropdown.get_by_text(sort_type).click()
+        # self.sort_dropdown.click()
+        # assert self.sort_dropdown.get_by_text(sort_type).is_checked()
         self.search_results.wait_for()
 
     @allure.step("Print prices for first five items")
