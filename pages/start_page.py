@@ -1,38 +1,31 @@
 import allure
 from playwright.sync_api import Page
-from pages.orgtechnics_and_supplies_page import OrgtechnicsAndSuppliesPage
+
+from pages._base_page import BasePage
+from pages.search_page import SearchPage
 
 
-class StartPage:
-    # Locators
-    POPUP_CLOSE_BUTTON = '//form//button[@type="button"]'
-    ALL_CATEGORIES_BTN = '//button[@data-marker="top-rubricator/all-categories"]'
-    CATEGORY_ELECTRONICS = '//div[contains(@class, "new-rubricator-content-rootCategory__text") and contains(normalize-space(), "Электроника")]'
-    CATEGORY_ORGTECHNICS_AND_SUPPLIES = '//div[contains(@class, "new-rubricator-content-child")]/a[@data-name="Оргтехника и расходники"]'
+class StartPage(BasePage):
 
     def __init__(self, page: Page) -> None:
-        self.page = page
+        super().__init__(page)
+        self.popup_close_button = 'form button[type="button"]'
+        self.all_categories_button = 'button[data-marker="top-rubricator/all-categories"]'
+        self.categories = 'div[class*="new-rubricator-content-rootCategory__text"]'
+        self.subcategories = 'div[class*="new-rubricator-content-child-"]'
 
     @allure.step("Close popup window")
     def close_popup(self) -> None:
-        self.page.locator(self.POPUP_CLOSE_BUTTON).click()
+        self.page.locator(self.popup_close_button).click()
 
-    @allure.step("Click 'All categories' button")
-    def click_all_categories_btn(self) -> None:
-        self.page.locator(self.ALL_CATEGORIES_BTN).click()
-
-    @allure.step("Hover 'Electronics' category")
-    def hover_category_electronics(self) -> None:
-        self.page.locator(self.CATEGORY_ELECTRONICS).hover()
-
-    @allure.step("Click 'Orgtechnics and supplies' category")
-    def click_category_orgtechnics_and_supplies(self) -> None:
-        self.page.locator(self.CATEGORY_ORGTECHNICS_AND_SUPPLIES).click()
-
-    @allure.step("Go to 'Orgtechnics and supplies' page")
-    def goto_orgtechnics_and_supplies_page(self) -> OrgtechnicsAndSuppliesPage:
+    @allure.step("Select category and subcategory")
+    def select_category_and_subcategory(self, category_name: str, subcategory_name: str) -> None:
         self.close_popup()
-        self.click_all_categories_btn()
-        self.hover_category_electronics()
-        self.click_category_orgtechnics_and_supplies()
-        return OrgtechnicsAndSuppliesPage(self.page)
+
+        self.page.locator(self.all_categories_button).click()
+        self.page.locator(self.categories).get_by_text(category_name).hover()
+        self.page.locator(self.subcategories).get_by_text(subcategory_name).click()
+
+    @allure.step("Go to search page")
+    def goto_search_page(self) -> SearchPage:
+        return SearchPage(self.page)
