@@ -4,6 +4,8 @@ from pathlib import Path
 import allure
 import pytest
 from pytest import fixture
+
+from helpers.files_helper import find_project_root, get_log_dir_path
 from pages.start_page import StartPage
 
 
@@ -19,7 +21,7 @@ def page(playwright):
         context (Context): Playwright browser context.
     """
     browser = playwright.chromium.launch(
-        headless=False,
+        headless=True,
         args=[
             '--start-maximized',
             '--no-sandbox',
@@ -63,19 +65,17 @@ def pytest_runtest_makereport(item):
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_runtest_logreport(report):
-    """
-    Hook for attaching log files to the Allure report when a test fails.
-    """
     outcome = yield
     report = outcome.get_result()
 
-    config_path = Path('./config.ini')
+    config_path = find_project_root(Path(__file__)) / 'config.ini'
     config = configparser.ConfigParser()
     config.read(config_path)
-    log_file_path = config.get('logging', 'file_path', fallback='app.log')
+    log_file_path = get_log_dir_path() / config.get('logging', 'file_path', fallback='app.log')
 
     if report.when == 'call' and report.failed:
         if Path(log_file_path).exists():
             with open(log_file_path, 'r') as log_file:
                 log_content = log_file.read()
             allure.attach(log_content, name="log_file", attachment_type=allure.attachment_type.TEXT)
+
