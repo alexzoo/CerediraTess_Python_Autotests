@@ -39,6 +39,5 @@ test_report.*
 test_results.*
 allure-results/
 screenshots/
-logs/*
 
 
