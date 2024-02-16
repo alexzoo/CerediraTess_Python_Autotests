@@ -71,7 +71,7 @@ def pytest_runtest_logreport(report):
     config_path = find_project_root(Path(__file__)) / 'config.ini'
     config = configparser.ConfigParser()
     config.read(config_path)
-    log_file_path = get_log_dir_path() / config.get('logging', 'file_path', fallback='app.log')
+    log_file_path = get_log_dir_path() / config.get('logging', 'log_file', fallback='app.log')
 
     if report.when == 'call' and report.failed:
         if Path(log_file_path).exists():
