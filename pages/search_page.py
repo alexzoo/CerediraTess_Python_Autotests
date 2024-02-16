@@ -3,6 +3,7 @@ from time import sleep
 from playwright.sync_api import Page
 import allure
 
+from elements.base_element import BaseElement
 from elements.button import Button
 from elements.input import Input
 from pages._base_page import BasePage
@@ -14,16 +15,16 @@ class SearchPage(BasePage):
         super().__init__(page)
         self.search_form_input = Input(self.page.locator('input[data-marker="search-form/suggest"]'))
         self.search_form_submit_button = Button(self.page.locator('button[data-marker="search-form/submit-button"]'))
-        self.search_filters = self.page.locator('div[data-marker="search-filters"]')
+        self.search_filters = BaseElement(self.page.locator('div[data-marker="search-filters"]'))
         self.search_filters_submit_button = Button(self.page.locator('button[data-marker="search-filters/submit-button"]'))
-        self.search_results = self.page.locator('div[data-marker="catalog-serp"]')
-        self.change_location = self.page.locator('div[data-marker="search-form/change-location"]')
+        self.search_results = BaseElement(self.page.locator('div[data-marker="catalog-serp"]'))
+        self.change_location = BaseElement(self.page.locator('div[data-marker="search-form/change-location"]'))
         self.popup_location = 'div[data-marker="popup-location/popup"]'
         self.popup_location_input = Button(self.page.locator('input[data-marker="popup-location/region/input"]'))
-        self.suggest_list = self.page.locator('ul[data-marker="suggest-list"]')
+        self.suggest_list = BaseElement(self.page.locator('ul[data-marker="suggest-list"]'))
         self.popup_location_save_button = Button(self.page.locator('button[data-marker="popup-location/save-button"]'))
-        self.sort_title = self.page.locator('span[data-marker="sort/title"]')
-        self.sort_dropdown = self.page.locator('div[data-marker="sort/dropdown"]')
+        self.sort_title = BaseElement(self.page.locator('span[data-marker="sort/title"]'))
+        self.sort_dropdown = BaseElement(self.page.locator('div[data-marker="sort/dropdown"]'))
 
     @allure.step("Search item")
     def make_search(self, item_name: str) -> None:
@@ -62,6 +63,6 @@ class SearchPage(BasePage):
     @allure.step("Print prices for first five items")
     def print_prices_for_items(self, nums: int) -> None:
         for i in range(nums):
-            list_of_prices = (self.search_results.locator('meta[itemprop="price"]').nth(i).get_attribute('content'))
+            list_of_prices = self.search_results.locator('meta[itemprop="price"]').nth(i).get_attribute('content')
             print(f"Price {list_of_prices}")
 
