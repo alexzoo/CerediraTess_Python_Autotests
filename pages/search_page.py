@@ -19,7 +19,7 @@ class SearchPage(BasePage):
         self.search_filters_submit_button = Button(self.page.locator('button[data-marker="search-filters/submit-button"]'))
         self.search_results = BaseElement(self.page.locator('div[data-marker="catalog-serp"]'))
         self.change_location = BaseElement(self.page.locator('div[data-marker="search-form/change-location"]'))
-        self.popup_location = 'div[data-marker="popup-location/popup"]'
+        # self.popup_location = BaseElement(self.page.locator('div[data-marker="popup-location/popup"]'))
         self.popup_location_input = Button(self.page.locator('input[data-marker="popup-location/region/input"]'))
         self.suggest_list = BaseElement(self.page.locator('ul[data-marker="suggest-list"]'))
         self.popup_location_save_button = Button(self.page.locator('button[data-marker="popup-location/save-button"]'))
@@ -44,9 +44,12 @@ class SearchPage(BasePage):
 
     @allure.step("Change region")
     def change_region(self, region_name: str) -> None:
-        self.change_location.click()
-        self.change_location.click()
-        self.page.wait_for_selector(self.popup_location)
+
+        for i in range(3):
+            self.change_location.click()
+            if self.popup_location_input.is_visible():
+                break
+
         self.popup_location_input.fill(region_name)
         self.suggest_list.get_by_text(region_name).first.click()
         self.popup_location_save_button.click()
