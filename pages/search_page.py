@@ -1,6 +1,6 @@
 from time import sleep
 
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 import allure
 
 from elements.base_element import BaseElement
@@ -38,7 +38,7 @@ class SearchPage(BasePage):
         new_checkbox = self.search_filters.get_by_text("Новые")
         if new_checkbox.is_checked() != new:
             new_checkbox.click()
-            assert new_checkbox.is_checked() == new
+            expect(new_checkbox).to_be_checked(checked=new)
             self.search_filters_submit_button.click()
             self.page.wait_for_load_state()
 
@@ -66,7 +66,7 @@ class SearchPage(BasePage):
                 break
 
         self.sort_dropdown.get_by_text(sort_type).click()
-        assert self.sort_title.first.inner_text() == sort_type
+        expect(self.sort_title.first).to_contain_text(sort_type)
         self.page.wait_for_load_state()
 
     @allure.step("Print prices for first five items")
