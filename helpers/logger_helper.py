@@ -6,22 +6,23 @@ import functools
 
 class Logger:
     """
-    A simple logger class that can be used to log messages to the console or a file.
+    A class for setting up and using a logger.
 
     Methods:
-    setup_logger(name): Creates a new logger with the specified name and returns it.
+        setup_logger(name) -> logging.Logger:
+            A static method for setting up a logger with the specified name.
     """
 
     @staticmethod
-    def setup_logger(name) -> logging.Logger:
+    def setup_logger(name: str) -> logging.Logger:
         """
-        Creates a new logger with the specified name and returns it.
+        A static method for setting up a logger with the specified name.
 
         Args:
-        name (str): The name of the logger.
+            name (str): The name of the logger.
 
         Returns:
-        logging.Logger: The new logger.
+            logging.Logger: The logger with the specified name.
         """
         config_path = Path('./config.ini')
 
@@ -29,14 +30,25 @@ class Logger:
         config.read(config_path)
 
         level = config.get('logging', 'level', fallback='INFO')
+        log_file_path = config.get('logging', 'file_path', fallback='app.log')
 
         numeric_level = getattr(logging, level.upper(), None)
         if not isinstance(numeric_level, int):
             raise ValueError(f'Invalid log level: {level}')
 
-        logging.basicConfig(level=numeric_level, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
         logger = logging.getLogger(name)
+        logger.setLevel(numeric_level)
+
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        ch = logging.StreamHandler()
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+
+        fh = logging.FileHandler(log_file_path)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+
         return logger
 
 
