@@ -53,6 +53,6 @@ def pytest_runtest_makereport(item):
     report = outcome.get_result()
     page = item.funcargs.get('page')
     if page and report.when == 'call' and report.failed:
-        screenshot_path = f"reports/{item.nodeid.replace('::', '_').replace('/', '_')}.png"
+        screenshot_path = f"screenshots/{item.nodeid.replace('::', '_').replace('/', '_')}.png"
         page.screenshot(path=screenshot_path)
         allure.attach.file(screenshot_path, name="screenshot", attachment_type=allure.attachment_type.PNG)
