@@ -56,8 +56,14 @@ class SearchPage(BasePage):
     def sort_results(self, sort_type: str) -> None:
         if sort_type not in ['Дороже', 'Дешевле', 'По дате']:
             raise ValueError("use only: 'Дороже', 'Дешевле' or 'По дате'")
-        self.sort_title.first.click()
+
+        for i in range(3):
+            self.sort_title.first.click()
+            if self.sort_dropdown.is_visible():
+                break
+
         self.sort_dropdown.get_by_text(sort_type).click()
+        assert self.sort_title.first.inner_text() == sort_type
         self.page.wait_for_load_state()
 
     @allure.step("Print prices for first five items")
