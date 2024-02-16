@@ -1,3 +1,6 @@
+import configparser
+from pathlib import Path
+
 import allure
 import pytest
 from pytest import fixture
@@ -56,3 +59,23 @@ def pytest_runtest_makereport(item):
         screenshot_path = f"screenshots/{item.nodeid.replace('::', '_').replace('/', '_')}.png"
         page.screenshot(path=screenshot_path)
         allure.attach.file(screenshot_path, name="screenshot", attachment_type=allure.attachment_type.PNG)
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_logreport(report):
+    """
+    Hook for attaching log files to the Allure report when a test fails.
+    """
+    outcome = yield
+    report = outcome.get_result()
+
+    config_path = Path('./config.ini')
+    config = configparser.ConfigParser()
+    config.read(config_path)
+    log_file_path = config.get('logging', 'file_path', fallback='app.log')
+
+    if report.when == 'call' and report.failed:
+        if Path(log_file_path).exists():
+            with open(log_file_path, 'r') as log_file:
+                log_content = log_file.read()
+            allure.attach(log_content, name="log_file", attachment_type=allure.attachment_type.TEXT)
