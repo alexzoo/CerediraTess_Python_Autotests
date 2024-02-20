@@ -24,8 +24,8 @@ class StartPage(BasePage):
     def select_category_and_subcategory(self, category_name: str, subcategory_name: str) -> None:
         self.close_popup()
         self.all_categories_button.click()
-        self.categories.get_by_text(category_name).hover()
-        self.subcategories.get_by_text(subcategory_name).click()
+        self.categories.get_by_text(category_name).first.hover()
+        self.subcategories.get_by_text(subcategory_name).first.click()
 
     @allure.step("Go to search page")
     def goto_search_page(self) -> SearchPage:

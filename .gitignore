@@ -32,7 +32,7 @@ test-results/
 playwright-report/
 pw-browser/
 
-# Reports and screenshots and logs
+# Reports and screenshots.png and logs
 pyreport.html
 result.xml
 test_report.*
