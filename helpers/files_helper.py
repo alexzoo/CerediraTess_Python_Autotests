@@ -17,17 +17,15 @@ def find_project_root(current_path: Path, marker_file: str = 'config.ini') -> Pa
     raise FileNotFoundError(f"Can't find root with marker file: '{marker_file}'.")
 
 
-def get_log_dir_path() -> Path:
+def get_dir_path(folder: str) -> Path:
     """
-    This function finds the root directory of the project by searching upwards from the current file path until
-    it finds a file with the given marker file name.
-    Then it creates a directory called "logs" in that directory if it does not exist.
-    Finally, it returns the path to the "logs" directory.
+    This function finds the project root directory and creates a directory with the given name if it does not exist.
 
-    :return: Path, the path to the "logs" directory.
+    :param folder: The name of the directory to create.
+    :return: The path to the directory.
     """
     project_root = find_project_root(Path(__file__), marker_file='config.ini')
-    log_dir_path = project_root / 'logs'
-    if not log_dir_path.exists():
-        os.makedirs(log_dir_path)
-    return log_dir_path
+    dir_path = project_root / folder
+    if not dir_path.exists():
+        os.makedirs(dir_path)
+    return dir_path

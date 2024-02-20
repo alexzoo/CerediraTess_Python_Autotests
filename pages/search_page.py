@@ -33,14 +33,15 @@ class SearchPage(BasePage):
         self.search_form_submit_button.click()
         self.page.wait_for_load_state()
 
-    @allure.step("Apply search filter 'New'")
-    def apply_search_filter_new(self, new=False) -> None:
-        new_checkbox = self.search_filters.get_by_text("Новые")
-        if new_checkbox.is_checked() != new:
-            new_checkbox.click()
-            expect(new_checkbox).to_be_checked(checked=new)
-            self.search_filters_submit_button.click()
-            self.page.wait_for_load_state()
+    @allure.step("Apply search filters")
+    def apply_search_filter(self, filter_name: str, checked: bool) -> None:
+        filter_checkbox = self.search_filters.get_by_text(filter_name)
+        if filter_checkbox.is_checked() != checked:
+            filter_checkbox.click()
+            expect(filter_checkbox).to_be_checked(checked=checked)
+
+        self.search_filters_submit_button.click()
+        self.page.wait_for_load_state()
 
     @allure.step("Change region")
     def change_region(self, region_name: str) -> None:

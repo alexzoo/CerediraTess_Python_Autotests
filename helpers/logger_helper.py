@@ -3,7 +3,7 @@ import configparser
 from pathlib import Path
 import functools
 
-from helpers.files_helper import find_project_root, get_log_dir_path
+from helpers.files_helper import find_project_root, get_dir_path
 
 
 class Logger:
@@ -23,7 +23,7 @@ class Logger:
         config.read(config_path)
 
         level = config.get('logging', 'level', fallback='INFO')
-        log_file_path = get_log_dir_path() / config.get('logging', 'log_file', fallback='app.log')
+        log_file_path = get_dir_path('logs') / config.get('logging', 'log_file', fallback='app.log')
 
         numeric_level = getattr(logging, level.upper(), None)
         if not isinstance(numeric_level, int):
