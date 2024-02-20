@@ -7,8 +7,8 @@ import pytest
     ('Электроника', 'Оргтехника и расходники', 'Сканер', 'Новые', True, 'Новосибирская область', 'Дешевле', 5),
     ('Электроника', 'Оргтехника и расходники', 'Факс', 'Новые', False, 'Москва', 'Дороже', 3)
 ], ids=[
-    'Электроника_Сканер_Новосибирская_Дешевле',
-    'Электроника_Факс_Москва_Дороже'
+    'Electronics-Scanner-Novosib-Lowprice',
+    'Electronics-Fax-Moscow-Highprice',
 ])
 def test_avito_search_parametrize(start_page, category, subcategory, search_query, filter_name, filter_state, region,
                                   sort_order, items):
