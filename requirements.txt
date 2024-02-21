@@ -4,3 +4,5 @@ pytest-playwright==0.4.4
 allure-pytest==2.13.2
 pytest-sugar==1.0.0
 pytest-rerunfailures~=13.0
+pytest-xdist==3.5.0
+

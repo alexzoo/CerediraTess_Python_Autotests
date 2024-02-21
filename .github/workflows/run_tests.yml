@@ -38,7 +38,7 @@ jobs:
 
       - name: all
         if: "github.event.inputs.deployment_target == 'all' "
-        run: pytest --alluredir=allure-results
+        run: pytest -n 3 --alluredir=allure-results
         continue-on-error: true
 
       - name: Store allure results
