@@ -1,8 +1,5 @@
 import allure
 from playwright.sync_api import Page
-
-from elements.base_element import BaseElement
-from elements.button import Button
 from pages._base_page import BasePage
 from pages.search_page import SearchPage
 
