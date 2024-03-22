@@ -1,5 +1,6 @@
 import allure
 import pytest
+from pages.start_page import StartPage
 
 
 @allure.feature('Test Avito search parametrize')
@@ -12,6 +13,8 @@ import pytest
 ])
 def test_avito_search_parametrize(page, category, subcategory, search_query, filter_name, filter_state, region,
                                   sort_order, items):
+    page = StartPage(page)
+    page.open_page()
     page.select_category_and_subcategory(category, subcategory)
     search_page = page.goto_search_page()
     search_page.make_search(search_query)
