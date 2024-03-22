@@ -39,7 +39,7 @@ def page(playwright):
 
 @fixture()
 def start_page(page):
-    page.goto('https://www.avito.ru/penza/transport?cd=1')
+    page.open_page('https://www.avito.ru/penza/transport?cd=1')
     yield StartPage(page)
 
 
